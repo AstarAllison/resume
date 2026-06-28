@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苏欣彤 - 个人简历</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 侧边导航 -->
+    <nav class="side-nav" id="sideNav">
+        <div class="nav-logo">SXT</div>
+        <div class="resume-version-switcher">
+            <button class="version-btn active" data-version="general">通用版</button>
+            <button class="version-btn" data-version="game">游戏行业版</button>
+            <button class="version-btn" data-version="finance">金融专业版</button>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-link active" data-section="home"><i class="fas fa-home"></i><span>首页</span></a></li>
+            <li><a href="#about" class="nav-link" data-section="about"><i class="fas fa-user"></i><span>关于我</span></a></li>
+            <li><a href="#skills" class="nav-link" data-section="skills"><i class="fas fa-chart-line"></i><span>核心能力</span></a></li>
+            <li><a href="#experience" class="nav-link" data-section="experience"><i class="fas fa-briefcase"></i><span>工作实习</span></a></li>
+            <li><a href="#projects" class="nav-link" data-section="projects"><i class="fas fa-project-diagram"></i><span>项目经历</span></a></li>
+            <li><a href="#campus" class="nav-link" data-section="campus"><i class="fas fa-university"></i><span>校园经历</span></a></li>
+            <li><a href="#portfolio" class="nav-link" data-section="portfolio"><i class="fas fa-images"></i><span>作品集</span></a></li>
+            <li><a href="#awards" class="nav-link" data-section="awards"><i class="fas fa-trophy"></i><span>荣誉奖项</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 首页 -->
+        <section id="home" class="section active">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">你好，我是 <span class="highlight">苏欣彤</span></h1>
+                        <p class="hero-subtitle">金融学硕士 | 数据分析 · 审计实务 · 产品策划</p>
+                        <p class="hero-description">
+                            你好!我是一名即将毕业的金融学硕士，毕业于上海对外经贸大学金融学（数字金融实验班），
+                            目前于布里斯托大学攻读金融与投资硕士学位（2025.09至今）。
+                        </p>
+                        <p class="hero-description" style="margin-top: 15px;">
+                            我具备扎实的金融专业背景和丰富的跨文化交流经验。在<strong>德勤中国上海所</strong>担任审计实习生期间，
+                            协助团队完成7个客户公司的审计程序，运用Excel整理52份审计底稿。在<strong>中国建设银行黄山分行</strong>实习期间，
+                            协助大堂服务，并参与普惠金融地方应用的实际调研。
+                        </p>
+                        <p class="hero-description" style="margin-top: 15px;">
+                            我擅长<strong>数据分析</strong>（Python、R、Excel）、<strong>财务审计</strong>和<strong>市场调研</strong>。
+                            同时在上海外国语大学辅修日语专业，具备跨文化沟通能力和国际视野。
+                            对互联网运营、产品策划以及文化娱乐行业有浓厚兴趣和深入实践。
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#about" class="btn btn-primary">了解更多</a>
+                            <a href="#experience" class="btn btn-secondary">查看经历</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <!-- PDF简历展示区 -->
+                        <div class="resume-pdf-viewer">
+                            <div class="pdf-header">
+                                <h3><i class="fas fa-file-pdf"></i> 我的简历</h3>
+                                <div class="pdf-actions">
+                                    <button class="pdf-btn" onclick="window.open('苏欣彤_中文简历.pdf', '_blank')"><i class="fas fa-eye"></i> 查看</button>
+                                    <button class="pdf-btn" onclick="window.location.href='苏欣彤_中文简历.pdf'"><i class="fas fa-download"></i> 下载</button>
+                                </div>
+                            </div>
+                            <div class="pdf-preview">
+                                <div class="pdf-page">
+                                    <div class="pdf-content">
+                                        <div class="pdf-section clickable" data-target="about">
+                                            <h4><i class="fas fa-graduation-cap"></i> 教育背景</h4>
+                                            <p><strong>布里斯托大学</strong> | 金融与投资硕士 | 2025.09至今</p>
+                                            <p><strong>上海对外经贸大学</strong> | 金融学学士 | 2021.09-2025.06</p>
+                                        </div>
+                                        <div class="pdf-section clickable" data-target="skills">
+                                            <h4><i class="fas fa-star"></i> 核心能力</h4>
+                                            <p>数据分析 · 财务审计 · 市场调研 · 跨文化沟通</p>
+                                            <p>Python · R · Excel · PPT · 日语</p>
+                                        </div>
+                                        <div class="pdf-section clickable" data-target="experience">
+                                            <h4><i class="fas fa-briefcase"></i> 工作实习</h4>
+                                            <p><strong>德勤中国上海所</strong> | 审计实习生 | 2025.01-2025.04</p>
+                                            <p><strong>中国建设银行黄山分行</strong> | 大堂经理实习生 | 2023.07-2023.08</p>
+                                        </div>
+                                        <div class="pdf-section clickable" data-target="projects">
+                                            <h4><i class="fas fa-project-diagram"></i> 项目经历</h4>
+                                            <p>互联网+创新创业大赛上海市市赛铜奖</p>
+                                            <p>金融学院学生会活动组织与数据分析</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于我 -->
+        <section id="about" class="section">
+            <div class="section-header">
+                <h2 class="section-title">关于我</h2>
+                <p class="section-subtitle">了解更多关于我的信息</p>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="images/photo.jpg" alt="苏欣彤" class="profile-photo">
+                </div>
+                <div class="about-text">
+                    <h3>个人简介</h3>
+                    <p>我是苏欣彤，一名即将毕业的金融学硕士。我本科毕业于上海对外经贸大学金融学（数字金融实验班），目前于布里斯托大学攻读金融与投资硕士学位。</p>
+                    <p>我具备扎实的金融专业背景，熟练掌握数据分析工具（Python、R、Excel），拥有德勤审计实习和中国建设银行实习经验。同时，我在上海外国语大学辅修日语专业，具备跨文化沟通能力。</p>
+                    <p>我对互联网运营、产品策划、数据分析、财务审计等领域都有深入实践，对游戏、文化娱乐行业有浓厚兴趣和独特见解。</p>
+                    
+                    <!-- 游戏经历（游戏行业版显示） -->
+                    <div class="game-experience" style="margin-top: 20px; padding: 20px; background: var(--light); border-radius: var(--radius-lg); display: none;">
+                        <h4><i class="fas fa-gamepad"></i> 游戏经历</h4>
+                        <p><strong>擅长游戏：</strong>王者荣耀（王者10星）、重返未来1999、斗地主、雀魂麻将、全网公敌、鹅鸭杀、各种解谜游戏、休闲小游戏、赛尔号、奥雅之光、QQ农场</p>
+                        <p><strong>游戏行业关注：</strong>关注游戏行业动态，接触过不同种类的游戏，喜欢看游戏剧情和不同的美术风格、叙事风格。</p>
+                    </div>
+                    
+                    <div class="personal-info">
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span><strong>教育：</strong>布里斯托大学 - 金融与投资硕士（在读）</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span><strong>本科：</strong>上海对外经贸大学 - 金融学学士（GPA 3.304/4.00）</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-language"></i>
+                            <span><strong>语言：</strong>英语（雅思6.5）、日语（日常对话）</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>1399102946@qq.com</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+86 138-5594-8332</span>
+                        </div>
+                    </div>
+                    
+                    <div class="about-buttons" style="margin-top: 30px;">
+                        <a href="苏欣彤_中文简历.pdf" download class="btn btn-primary" id="downloadResumeBtn">
+                            <i class="fas fa-download"></i> 下载PDF简历
+                        </a>
+                        <a href="#contact" class="btn btn-secondary">
+                            <i class="fas fa-envelope"></i> 联系我
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心能力 -->
+        <section id="skills" class="section">
+            <div class="section-header">
+                <h2 class="section-title">核心能力</h2>
+                <p class="section-subtitle">我具备的专业技能和能力</p>
+            </div>
+            <div class="skills-content">
+                <!-- 求职通用能力 -->
+                <div class="skill-category">
+                    <h3><i class="fas fa-users"></i> 求职通用能力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">沟通协作能力</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">团队合作</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="88"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">任务拆分与项目管理</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">时间管理与多任务处理</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="82"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据分析能力 -->
+                <div class="skill-category">
+                    <h3><i class="fas fa-chart-bar"></i> 数据分析能力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Python（数据处理、分析）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="75"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">R语言（统计分析）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="70"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Excel（VLOOKUP等函数、数据透视表）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="88"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">MySQL（数据库查询）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="65"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 金融与财务能力 -->
+                <div class="skill-category">
+                    <h3><i class="fas fa-coins"></i> 金融与财务能力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">财务审计（德勤实习经验）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="82"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">财务分析报告</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">中级财务会计</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">计量经济学</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="78"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品与运营能力 -->
+                <div class="skill-category">
+                    <h3><i class="fas fa-rocket"></i> 产品与运营能力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">需求分析与市场调研</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">竞品分析（SWOT模型）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="78"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">文案撰写与公众号运营</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="75"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">PPT制作与演示</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 语言与文化能力 -->
+                <div class="skill-category">
+                    <h3><i class="fas fa-globe"></i> 语言与文化能力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">英语（雅思6.5、六级530）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="82"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">日语（日常对话、辅修专业）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="70"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">跨文化沟通与国际视野</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">流行文化与行为心理学</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="75"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏相关能力（游戏行业版显示） -->
+                <div class="skill-category game-skills" style="display: none;">
+                    <h3><i class="fas fa-gamepad"></i> 游戏相关能力</h3>
+                    <div class="skill-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">游戏策划（参与9次活动策划）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">游戏分析（关注行业动态、美术风格、叙事设计）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="75"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">游戏经验（多种类游戏）</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 工作实习 -->
+        <section id="experience" class="section">
+            <div class="section-header">
+                <h2 class="section-title">工作实习</h2>
+                <p class="section-subtitle">我的实习和工作经历</p>
+            </div>
+            <div class="showcase-slider" id="experienceSlider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <div class="slide-image">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="slide-content">
+                            <h3>德勤中国上海所</h3>
+                            <p class="slide-subtitle">审计实习生 | 2025.01 - 2025.04</p>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-image">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="slide-content">
+                            <h3>中国建设银行黄山分行</h3>
+                            <p class="slide-subtitle">大堂经理岗暑期实习生 | 2023.07 - 2023.08</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="slider-dots"></div>
+                    <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="experience-cards">
+                <div class="experience-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="card-title">
+                            <h3>德勤中国上海所</h3>
+                            <p>审计实习生 | 2025.01 - 2025.04</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> 协助完成审计步骤：随团队到7个客户公司完成审计程序，与财务人员沟通细节</li>
+                            <li><i class="fas fa-check-circle"></i> 独立完成存货监盘、凭证信息查找和核对，及时反馈进度</li>
+                            <li><i class="fas fa-check-circle"></i> 整理审计底稿：使用Excel进行52份底稿数据核对整理</li>
+                            <li><i class="fas fa-check-circle"></i> 使用办公软件进行格式调整，确保底稿规范清晰</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="experience-detail.html" class="card-link">查看详情 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="card-title">
+                            <h3>中国建设银行黄山分行</h3>
+                            <p>大堂经理岗暑期实习生 | 2023.07 - 2023.08</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> 协助营业网点大堂服务：进行客户分流，熟悉智慧柜员机业务办理流程</li>
+                            <li><i class="fas fa-check-circle"></i> 引导客户操作，帮助客户完成手机银行账户激活</li>
+                            <li><i class="fas fa-check-circle"></i> 联系客户：提醒客户处理对公账户对账、宣传银行卡使用规范</li>
+                            <li><i class="fas fa-check-circle"></i> 实践调研：参与高一新生家长缴费、暑期实习生下乡活动</li>
+                            <li><i class="fas fa-check-circle"></i> 实际考察农业与金融结合案例，学习普惠金融在地方实际应用的方法</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="card-link">查看详情 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目经历 -->
+        <section id="projects" class="section">
+            <div class="section-header">
+                <h2 class="section-title">项目经历</h2>
+                <p class="section-subtitle">我参与的项目和实践</p>
+            </div>
+            <div class="showcase-slider" id="projectsSlider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <div class="slide-image">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="slide-content">
+                            <h3>互联网+创新创业大赛</h3>
+                            <p class="slide-subtitle">上海市市赛铜奖 | 2023.06</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="slider-dots"></div>
+                    <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="project-cards">
+                <div class="project-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="card-title">
+                            <h3>互联网+创新创业大赛上海市市赛铜奖</h3>
+                            <p>组员 | 2023.06</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4>项目描述</h4>
+                        <p>小组以文旅和非遗的结合设计旅行软件，负责竞品分析和商业模式设计。</p>
+                        
+                        <h4>我的职责</h4>
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> <strong>竞品分析：</strong>使用SWOT模型分析旅游APP的发展环境</li>
+                            <li><i class="fas fa-chevron-right"></i> 对市场上主要产品的设计思路进行分析</li>
+                            <li><i class="fas fa-chevron-right"></i> 总结当时行业方向、产品特点、目标客户和业务、市场份额等</li>
+                            <li><i class="fas fa-chevron-right"></i> <strong>计划商业模式：</strong>前期通过团队协作，共同商讨产品的定位和市场</li>
+                            <li><i class="fas fa-chevron-right"></i> 后通过对供应链、消费者需求的考虑，定下多样化产品设计</li>
+                            <li><i class="fas fa-chevron-right"></i> 链接社群内容进行宣传营销等方法，完善对商业模式的计划</li>
+                        </ul>
+                        
+                        <h4>项目成果</h4>
+                        <p>获得互联网+创新创业大赛上海市市赛铜奖</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="project-detail.html" class="card-link">查看详情 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 校园经历 -->
+        <section id="campus" class="section">
+            <div class="section-header">
+                <h2 class="section-title">校园经历</h2>
+                <p class="section-subtitle">我在校园中的活动和实践</p>
+            </div>
+            <div class="showcase-slider" id="campusSlider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <div class="slide-image">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="slide-content">
+                            <h3>金融管理学院团委、学生会</h3>
+                            <p class="slide-subtitle">信息中心训练生 | 2021.09 - 2022.05</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="slider-dots"></div>
+                    <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="campus-cards">
+                <div class="campus-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="card-title">
+                            <h3>金融管理学院团委、学生会</h3>
+                            <p>信息中心训练生 | 2021.09 - 2022.05</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4>活动组织和现场引导</h4>
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> 参与3次院级活动的协助引导工作和活动准备工作</li>
+                            <li><i class="fas fa-chevron-right"></i> 参与策划和组织1次院级活动</li>
+                            <li><i class="fas fa-chevron-right"></i> 包括Elite菁英启航训练营游戏活动的策划和执行、现场引导</li>
+                            <li><i class="fas fa-chevron-right"></i> 易班网络电竞比赛过程录屏等</li>
+                        </ul>
+                        
+                        <h4>信息统计和数据处理工作</h4>
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> 运用Word、Excel处理5次空教室数据</li>
+                            <li><i class="fas fa-chevron-right"></i> 使用麦客制作活动报名表单3次</li>
+                            <li><i class="fas fa-chevron-right"></i> 制作活动大屏PPT 1次</li>
+                            <li><i class="fas fa-chevron-right"></i> 每周部门例会仔细了解部门发展状况和任务，完整提供2次例会会议记录</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="campus-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <div class="card-title">
+                            <h3>上海外国语大学</h3>
+                            <p>日语专业辅修 | 2022.09 - 2024.06</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4>学习经历</h4>
+                        <ul>
+                            <li><i class="fas fa-chevron-right"></i> 辅修日语专业，均分82.8125/100</li>
+                            <li><i class="fas fa-chevron-right"></i> 具备日语日常对话能力</li>
+                            <li><i class="fas fa-chevron-right"></i> 提升跨文化沟通能力和国际视野</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 作品集 -->
+        <section id="portfolio" class="section">
+            <div class="section-header">
+                <h2 class="section-title">作品集</h2>
+                <p class="section-subtitle">我的作品和项目展示</p>
+            </div>
+            <div class="portfolio-filter">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="data-analysis">数据分析</button>
+                <button class="filter-btn" data-filter="business-analysis">商业分析</button>
+                <button class="filter-btn" data-filter="game">游戏相关（待补充）</button>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item" data-category="business-analysis">
+                    <div class="item-image">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="item-overlay">
+                        <h3>文旅非遗旅行软件竞品分析</h3>
+                        <p>使用SWOT模型分析旅游APP市场</p>
+                        <a href="#" class="item-link">查看详情</a>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="data-analysis">
+                    <div class="item-image">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <div class="item-overlay">
+                        <h3>审计底稿数据整理</h3>
+                        <p>使用Excel进行52份底稿数据核对整理</p>
+                        <a href="#" class="item-link">查看详情</a>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="data-analysis">
+                    <div class="item-image">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="item-overlay">
+                        <h3>空教室数据处理</h3>
+                        <p>运用Word、Excel处理5次空教室数据</p>
+                        <a href="#" class="item-link">查看详情</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 荣誉奖项 -->
+        <section id="awards" class="section">
+            <div class="section-header">
+                <h2 class="section-title">荣誉奖项</h2>
+                <p class="section-subtitle">我获得的荣誉和奖项</p>
+            </div>
+            <div class="showcase-slider" id="awardsSlider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <div class="slide-image">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="slide-content">
+                            <h3>优秀学生奖学金</h3>
+                            <p class="slide-subtitle">上海对外经贸大学</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="slider-dots"></div>
+                    <button class="slider-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="awards-cards">
+                <div class="award-card">
+                    <div class="award-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="award-content">
+                        <h3>优秀学生奖学金 一等奖</h3>
+                        <p class="award-org">上海对外经贸大学</p>
+                        <p class="award-time">2021-2025期间获得一次</p>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="award-content">
+                        <h3>优秀学生奖学金 二等奖</h3>
+                        <p class="award-org">上海对外经贸大学</p>
+                        <p class="award-time">2021-2025期间获得两次</p>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="award-content">
+                        <h3>优秀学生奖学金 三等奖</h3>
+                        <p class="award-org">上海对外经贸大学</p>
+                        <p class="award-time">2021-2025期间获得一次</p>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="award-content">
+                        <h3>优秀学科奖学金</h3>
+                        <p class="award-org">上海对外经贸大学</p>
+                        <p class="award-time">2021-2025期间获得一次</p>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div class="award-content">
+                        <h3>互联网+创新创业大赛上海市市赛铜奖</h3>
+                        <p class="award-org">上海市教育委员会</p>
+                        <p class="award-time">2023.06</p>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="award-content">
+                        <h3>全国计算机二级MS Office证书</h3>
+                        <p class="award-org">教育部考试中心</p>
+                        <p class="award-time">熟练运用Excel、PPT</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -21,7 +21,9 @@
         .detail-block li::before { content: '\f054'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--primary); font-size: 0.65rem; margin-top: 5px; flex-shrink: 0; }
         .tag-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
         .tag-list span { padding: 5px 14px; background: var(--light); border-radius: var(--radius-full); color: var(--primary); font-weight: 600; font-size: 0.82rem; }
-        @media (max-width: 768px) { .detail-container { padding: 24px 18px 48px; } .detail-title { font-size: 1.5rem; } .detail-block { padding: 16px 18px; } }
+        @media (max-width: 768px) { .detail-container { padding: 24px 18px 48px; } .detail-title { font-size: 1.5rem; } .detail-block { padding: 16px 18px; } .detail-meta { gap: 12px; font-size: 0.85rem; } .detail-block h4 { font-size: 0.95rem; } .detail-block p { font-size: 0.88rem; } .detail-block li { font-size: 0.86rem; } }
+        @media (max-width: 480px) { .detail-container { padding: 16px 12px 36px; } .detail-title { font-size: 1.25rem; } .detail-header { margin-bottom: 24px; padding-bottom: 16px; } .detail-block { padding: 14px 16px; margin-bottom: 14px; } .detail-block h4 { font-size: 0.9rem; } .detail-block p { font-size: 0.82rem; line-height: 1.7; } .detail-block li { font-size: 0.8rem; padding: 5px 0; } .detail-meta { gap: 8px; font-size: 0.78rem; } .tag-list span { font-size: 0.75rem; padding: 4px 10px; } }
+        @media (max-width: 360px) { .detail-container { padding: 12px 8px 28px; } .detail-title { font-size: 1.1rem; } .detail-block { padding: 12px 14px; } }
     </style>
 </head>
 <body>
@@ -45,7 +47,7 @@
         </ul>
     </nav>
 
-    <main class="main-content" style="margin-left:230px; padding: 0;">
+    <main class="main-content">
         <div class="detail-container">
             <div id="navTop"></div>
 

@@ -85,6 +85,7 @@ body.version-finance {
 
 html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -93,6 +94,9 @@ body {
     background-color: var(--light);
     line-height: 1.6;
     overflow-x: hidden;
+    /* 防止 iOS 横向滚动 */
+    position: relative;
+    width: 100%;
 }
 
 a {
@@ -128,6 +132,7 @@ img {
     opacity: 1;
     transition: opacity 0.3s ease;
     padding: 36px;
+    overflow-y: auto;
 }
 
 .version-modal.hidden {
@@ -141,6 +146,7 @@ img {
     padding: var(--space-2xl);
     box-shadow: var(--shadow-lg);
     max-width: 480px;
+    width: 100%;
     animation: slideInLeft 0.4s ease;
 }
 
@@ -468,6 +474,7 @@ img {
     flex-direction: column;
     justify-content: space-evenly;
     min-height: 520px;
+    max-width: 100%;
 }
 
 /* 右侧简介文字缩小、不抢眼 */
@@ -710,10 +717,12 @@ img {
 
 .about-image {
     flex: 0 0 260px;
+    max-width: 100%;
 }
 
 .profile-photo {
     width: 240px;
+    max-width: 100%;
     height: auto;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
@@ -803,7 +812,7 @@ img {
 
 .skill-categories {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
     gap: 28px;
 }
 
@@ -897,7 +906,7 @@ img {
 /* 响应式 */
 @media (max-width: 1024px) {
     .skill-categories {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
         gap: 20px;
     }
 }
@@ -1082,7 +1091,7 @@ img {
 
 .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
     gap: var(--space-lg);
 }
 
@@ -1208,7 +1217,7 @@ img {
 
 .awards-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
     gap: var(--space-xl);
 }
 
@@ -1343,9 +1352,16 @@ img {
 }
 
 /* ===========================
-   响应式设计
+   响应式设计 — 全设备适配
+   断点体系：
+   - ≤480px: 小手机 (iPhone SE / Android 小屏)
+   - ≤768px: 大手机 / 小平板竖屏
+   - ≤1024px: 平板横屏 / 小笔记本
+   - ≤1280px: 笔记本
+   - >1280px: 桌面显示器
    =========================== */
 
+/* ---- 平板横屏 / 小笔记本 (≤1024px) ---- */
 @media (max-width: 1024px) {
     .side-nav {
         transform: translateX(-100%);
@@ -1388,17 +1404,34 @@ img {
     #awards.section.active {
         min-height: calc(100vh - var(--space-xl) * 2);
     }
+    /* 平板端 section-card 缩小内边距 */
+    .section-card {
+        padding: var(--space-xl);
+    }
+    /* 平板端卡片内边距缩小 */
+    .experience-card,
+    .project-card,
+    .campus-card {
+        padding: var(--space-lg);
+    }
+    .award-card {
+        padding: var(--space-lg);
+    }
 }
 
+/* ---- 大手机 / 小平板竖屏 (≤768px) ---- */
 @media (max-width: 768px) {
     .section {
-        padding: var(--space-xl) var(--space-md);
+        padding: var(--space-lg) var(--space-md);
+    }
+    .section-card {
+        padding: var(--space-lg);
     }
     .hero-title {
-        font-size: 1.8rem;
+        font-size: 1.7rem;
     }
     .section-title {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
     }
     .portfolio-grid {
         grid-template-columns: 1fr;
@@ -1409,6 +1442,364 @@ img {
     .skill-categories {
         grid-template-columns: 1fr;
         gap: 16px;
+    }
+    /* 手机端卡片内边距再缩小 */
+    .experience-card,
+    .project-card,
+    .campus-card {
+        padding: var(--space-md);
+    }
+    .award-card {
+        padding: var(--space-md);
+        gap: var(--space-md);
+    }
+    /* 手机端卡片图标缩小 */
+    .card-icon,
+    .award-icon {
+        width: 40px;
+        height: 40px;
+    }
+    .card-icon i,
+    .award-icon i {
+        font-size: 1.1rem;
+    }
+    .card-header {
+        gap: var(--space-md);
+        margin-bottom: var(--space-md);
+        padding-bottom: var(--space-md);
+    }
+    /* 手机端版本弹窗优化 */
+    .version-modal {
+        padding: var(--space-md);
+        align-items: center;
+        justify-content: center;
+    }
+    .version-modal-content {
+        padding: var(--space-xl);
+        max-width: 100%;
+        width: 100%;
+    }
+    .version-modal-btn {
+        padding: var(--space-md);
+        gap: var(--space-md);
+    }
+    .version-modal-btn i {
+        font-size: 1.3rem;
+        width: 28px;
+    }
+    /* 手机端关于我页面 */
+    .profile-photo {
+        width: 180px;
+    }
+    .about-image {
+        flex: none;
+    }
+    /* 手机端 PDF 预览缩小 */
+    .pdf-header {
+        padding: var(--space-md);
+    }
+    .pdf-preview {
+        padding: var(--space-md);
+    }
+    .pdf-section {
+        padding: var(--space-sm) var(--space-md);
+    }
+    /* 手机端 hero 区域 */
+    .hero-buttons {
+        flex-wrap: wrap;
+    }
+    .hero-description p {
+        font-size: 0.88rem;
+    }
+    /* 返回顶部按钮位置调整 */
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+    }
+    /* 手机端 portfolio item 缩小 */
+    .item-front {
+        padding: var(--space-xl) var(--space-md);
+        min-height: 180px;
+    }
+    .item-front i {
+        font-size: 2rem;
+    }
+    .item-back {
+        padding: var(--space-lg);
+    }
+}
+
+/* ---- 小手机 (≤480px) ---- */
+@media (max-width: 480px) {
+    .main-content {
+        padding: var(--space-md);
+    }
+    .section {
+        padding: var(--space-md) var(--space-sm);
+    }
+    .section-card {
+        padding: var(--space-md);
+    }
+    .hero-title {
+        font-size: 1.45rem;
+    }
+    .section-title {
+        font-size: 1.3rem;
+    }
+    .hero-subtitle {
+        font-size: 0.92rem;
+    }
+    .hero-description p {
+        font-size: 0.82rem;
+        line-height: 1.65;
+    }
+    /* 小手机端卡片进一步紧凑 */
+    .experience-card,
+    .project-card,
+    .campus-card {
+        padding: var(--space-sm) var(--space-md);
+    }
+    .award-card {
+        padding: var(--space-sm) var(--space-md);
+        gap: var(--space-sm);
+    }
+    .card-icon,
+    .award-icon {
+        width: 36px;
+        height: 36px;
+    }
+    .card-icon i,
+    .award-icon i {
+        font-size: 1rem;
+    }
+    .card-header {
+        gap: var(--space-sm);
+    }
+    .card-title h3 {
+        font-size: 0.95rem;
+    }
+    .card-title p {
+        font-size: 0.78rem;
+    }
+    .card-body p {
+        font-size: 0.85rem;
+    }
+    /* 小手机端 award 文字缩小 */
+    .award-content h3 {
+        font-size: 0.95rem;
+    }
+    .award-org {
+        font-size: 0.8rem;
+    }
+    .award-time {
+        font-size: 0.75rem;
+    }
+    /* 小手机端技能标签 */
+    .skill-tag {
+        font-size: 0.75rem;
+        padding: 5px 12px;
+    }
+    .skill-cat-title {
+        font-size: 1rem;
+    }
+    .skill-item {
+        font-size: 0.88rem;
+        padding: 8px 10px;
+    }
+    /* 小手机端 portfolio */
+    .item-front {
+        padding: var(--space-lg) var(--space-sm);
+        min-height: 160px;
+    }
+    .item-front i {
+        font-size: 1.8rem;
+    }
+    .item-front h3 {
+        font-size: 0.95rem;
+    }
+    .item-front-meta {
+        font-size: 0.72rem;
+    }
+    /* 小手机端版本弹窗 */
+    .version-modal-content {
+        padding: var(--space-lg);
+    }
+    .version-modal-content h3 {
+        font-size: 1.15rem;
+    }
+    .version-modal-content > p {
+        font-size: 0.82rem;
+    }
+    .version-modal-btn {
+        padding: 10px var(--space-sm);
+        gap: var(--space-sm);
+    }
+    .version-modal-btn i {
+        font-size: 1.1rem;
+        width: 24px;
+    }
+    .version-modal-btn span {
+        font-size: 0.92rem;
+    }
+    .version-modal-btn small {
+        font-size: 0.72rem;
+    }
+    /* 小手机端 profile photo */
+    .profile-photo {
+        width: 140px;
+    }
+    /* 小手机端 PDF 预览 */
+    .pdf-header h3 {
+        font-size: 0.92rem;
+    }
+    .pdf-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+    .pdf-section h4 {
+        font-size: 0.85rem;
+    }
+    .pdf-section p {
+        font-size: 0.78rem;
+    }
+    .star-text {
+        font-size: 0.75rem;
+    }
+    /* 小手机端 about-text */
+    .about-text h3 {
+        font-size: 1.2rem;
+    }
+    .about-text p {
+        font-size: 0.88rem;
+    }
+    .info-item {
+        font-size: 0.85rem;
+        padding: var(--space-xs) var(--space-sm);
+    }
+    /* 小手机端按钮 */
+    .btn {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+    }
+    .btn-sm {
+        padding: 7px 16px;
+        font-size: 0.82rem;
+    }
+    /* 小手机端 filter 按钮 */
+    .filter-btn {
+        padding: 5px 14px;
+        font-size: 0.78rem;
+    }
+    /* 小手机端返回顶部 */
+    .back-to-top {
+        bottom: 16px;
+        right: 16px;
+        width: 38px;
+        height: 38px;
+    }
+    /* 小手机端导航 logo */
+    .logo-name {
+        font-size: 1.1rem;
+    }
+    .logo-contact span {
+        font-size: 0.68rem;
+    }
+}
+
+/* ---- 超小屏 (≤360px, iPhone SE 等极小屏) ---- */
+@media (max-width: 360px) {
+    .main-content {
+        padding: var(--space-sm);
+    }
+    .section {
+        padding: var(--space-sm) var(--space-xs);
+    }
+    .section-card {
+        padding: var(--space-sm);
+    }
+    .hero-title {
+        font-size: 1.3rem;
+    }
+    .section-title {
+        font-size: 1.2rem;
+    }
+    /* 极小屏卡片图标再缩 */
+    .card-icon,
+    .award-icon {
+        width: 32px;
+        height: 32px;
+    }
+    .card-icon i,
+    .award-icon i {
+        font-size: 0.9rem;
+    }
+    .card-header {
+        gap: var(--space-xs);
+    }
+    .profile-photo {
+        width: 120px;
+    }
+    .award-content h3 {
+        font-size: 0.88rem;
+    }
+    .card-title h3 {
+        font-size: 0.88rem;
+    }
+}
+
+/* ---- 大屏桌面优化 (>1280px) ---- */
+@media (min-width: 1281px) {
+    .main-content {
+        margin-left: 230px;
+        /* 不限制 max-width，让内容填满可用宽度 */
+    }
+}
+
+/* ---- 超大屏 (>1920px) 居中限制 ---- */
+@media (min-width: 1921px) {
+    .main-content {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: var(--space-3xl) var(--space-3xl);
+    }
+    .side-nav {
+        left: calc((100vw - 1430px) / 2);
+    }
+}
+
+/* ---- 横屏手机优化 ---- */
+@media (max-width: 1024px) and (orientation: landscape) and (max-height: 500px) {
+    .version-modal {
+        align-items: center;
+        padding: var(--space-sm);
+    }
+    .version-modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    #home.section.active {
+        min-height: auto;
+    }
+}
+
+/* ---- 打印优化 ---- */
+@media print {
+    .side-nav,
+    .back-to-top,
+    .version-modal,
+    #bgCanvas {
+        display: none !important;
+    }
+    .main-content {
+        margin: 0;
+        padding: 0;
+    }
+    .section {
+        display: block !important;
+        page-break-after: always;
     }
 }
 
@@ -1469,4 +1860,116 @@ img {
 .quick-nav-link:hover {
     background: var(--primary);
     color: var(--white);
+}
+
+/* ===========================
+   移动端浮动导航按钮（FAB）
+   =========================== */
+
+/* 浮动圆形菜单按钮 — 仅在侧边栏隐藏时显示（≤1024px） */
+.nav-fab {
+    display: none; /* 默认隐藏，由 JS 或 media query 控制 */
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    z-index: 9000;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary) 0%, #7c4dff 100%);
+    color: var(--white);
+    font-size: 1.25rem;
+    box-shadow: 0 4px 16px rgba(108, 99, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.12);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+    align-items: center;
+    justify-content: center;
+    /* 防止 iOS 长按弹出菜单 */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
+.nav-fab:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 22px rgba(108, 99, 255, 0.45), 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.nav-fab:active {
+    transform: scale(0.95);
+}
+
+/* 侧边栏打开时 FAB 变为关闭图标 */
+.nav-fab.active {
+    background: linear-gradient(135deg, var(--danger) 0%, #ff5252 100%);
+    box-shadow: 0 4px 16px rgba(255, 82, 82, 0.35), 0 2px 6px rgba(0, 0, 0, 0.12);
+    transform: rotate(90deg);
+}
+
+/* 遮罩层 — 点击可关闭侧边栏（无背景色，不遮挡内容） */
+.nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 999; /* 低于侧边栏(1000)，不遮挡侧边栏链接的点击 */
+}
+
+.nav-overlay.visible {
+    display: block;
+    animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* 左侧边缘感应区（桌面端 hover 自动展开） */
+.nav-edge-zone {
+    display: none; /* 仅桌面端显示 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 100%;
+    z-index: 8998;
+    cursor: pointer;
+}
+
+/* 响应式：≤1024px 时显示 FAB */
+@media (max-width: 1024px) {
+    .nav-fab {
+        display: flex;
+        animation: fabIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .nav-edge-zone {
+        display: none;
+    }
+}
+
+/* 响应式：>1024px 时显示左侧边缘感应区 */
+@media (min-width: 1025px) {
+    .nav-edge-zone {
+        display: block;
+    }
+}
+
+@keyframes fabIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* 小屏 FAB 稍微缩小一点 */
+@media (max-width: 480px) {
+    .nav-fab {
+        top: 80px;
+        left: 16px;
+        width: 46px;
+        height: 46px;
+        font-size: 1.1rem;
+    }
 }

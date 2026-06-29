@@ -4,648 +4,711 @@
 
 let currentSection = 'home';
 let currentVersion = 'general';
-let showcaseSliders = {};
 
 // ===========================
 // DOM 加载完成后初始化
 // ===========================
 
 document.addEventListener('DOMContentLoaded', function() {
+    initVersionModal();
     initNavigation();
     initVersionSwitcher();
-    initShowcaseSliders();
-    initSkillBars();
     initPortfolioFilter();
     initPDFViewer();
-    initVersionTransition();
-    initLoadingAnimation();
-    
-    // 默认显示首页
-    showSection('home');
+    initBackToTop();
+    initClickableCards();
+    initRippleEffect();
+    initBackgroundEffect();
+    initSkillItemClicks();
+    initPortfolioHoverRedesign();
+    initHomeAvatar();
+
+    handleHashOnLoad();
 });
 
 // ===========================
-// 加载动画（简洁，HR友好）
+// 首页右上角头像 — 仅大屏显示
 // ===========================
 
-function initLoadingAnimation() {
-    // 创建加载动画
-    const loader = document.createElement('div');
-    loader.id = 'pageLoader';
-    loader.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        transition: opacity 0.5s ease;
-    `;
-    
-    loader.innerHTML = `
-        <div style="text-align: center;">
-            <div style="
-                width: 40px;
-                height: 40px;
-                border: 3px solid #f0f0f0;
-                border-top: 3px solid #6c63ff;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin: 0 auto 16px;
-            "></div>
-            <p style="color: #636e9c; font-weight: 600;">加载中...</p>
-        </div>
-        <style>
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        </style>
-    `;
-    
-    document.body.appendChild(loader);
-    
-    // 页面加载完成后隐藏
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            loader.style.opacity = '0';
-            setTimeout(() => {
-                if (loader.parentNode) {
-                    loader.parentNode.removeChild(loader);
-                }
-            }, 500);
-        }, 800);
+function initHomeAvatar() {
+    const avatar = document.querySelector('.home-avatar-corner');
+    if (!avatar) return;
+    function toggle() {
+        avatar.style.display = window.innerWidth > 1024 ? 'block' : 'none';
+    }
+    toggle();
+    window.addEventListener('resize', toggle);
+}
+
+// ===========================
+// 版本选择弹窗 — 只用 localStorage，首次才弹
+// ===========================
+
+function initVersionModal() {
+    const modal = document.getElementById('versionModal');
+    if (!modal) return;
+
+    // 已经选过版本 → 直接应用并隐藏弹窗
+    const savedVersion = localStorage.getItem('resumeVersion');
+    if (savedVersion) {
+        modal.classList.add('hidden');
+        switchVersion(savedVersion);
+        updateVersionNavBtn(savedVersion);
+        return;
+    }
+
+    // 首次访问 → 显示弹窗
+    modal.classList.remove('hidden');
+
+    const btns = modal.querySelectorAll('.version-modal-btn');
+    btns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const version = this.getAttribute('data-version');
+            switchVersion(version);
+            updateVersionNavBtn(version);
+            localStorage.setItem('resumeVersion', version);
+            modal.classList.add('hidden');
+        });
     });
 }
 
-// ===========================
-// 版本切换 - 添加渐变过渡效果
-// ===========================
-
-function initVersionTransition() {
-    // 创建版本切换过渡层
-    const transitionOverlay = document.createElement('div');
-    transitionOverlay.id = 'versionTransitionOverlay';
-    transitionOverlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    `;
-    document.body.appendChild(transitionOverlay);
+function updateVersionNavBtn(version) {
+    document.querySelectorAll('.version-btn').forEach(b => b.classList.remove('active'));
+    const target = document.querySelector(`.version-btn[data-version="${version}"]`);
+    if (target) target.classList.add('active');
 }
 
-function switchVersionWithTransition(version) {
-    const overlay = document.getElementById('versionTransitionOverlay');
-    if (!overlay) return;
-    
-    // 设置过渡层颜色
-    let gradient = '';
-    switch(version) {
-        case 'general':
-            gradient = 'linear-gradient(135deg, rgba(108, 99, 255, 0.15) 0%, rgba(255, 101, 132, 0.15) 100%)';
-            break;
-        case 'game':
-            gradient = 'linear-gradient(135deg, rgba(155, 89, 182, 0.2) 0%, rgba(231, 76, 60, 0.2) 100%)';
-            break;
-        case 'finance':
-            gradient = 'linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(212, 175, 55, 0.2) 100%)';
-            break;
+// ===========================
+// 处理 URL hash
+// ===========================
+
+function handleHashOnLoad() {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && document.getElementById(hash)) {
+        showSection(hash);
+        updateNavHighlight(hash);
+    } else {
+        showSection('home');
     }
-    
-    overlay.style.background = gradient;
-    
-    // 显示过渡层
-    overlay.style.opacity = '1';
-    
-    // 延迟切换版本
-    setTimeout(() => {
-        switchVersion(version);
-        
-        // 隐藏过渡层
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-        }, 100);
-    }, 300);
 }
 
 // ===========================
-// 导航功能
+// 导航
 // ===========================
 
 function initNavigation() {
-    // 侧边导航点击
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const sectionId = this.getAttribute('data-section');
             showSection(sectionId);
-            
-            // 更新活跃状态
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
+            updateNavHighlight(sectionId);
+            history.pushState(null, null, '#' + sectionId);
         });
     });
-    
-    // PDF section 点击跳转
-    const pdfSections = document.querySelectorAll('.pdf-section.clickable');
+
+    // PDF 模块点击跳转对应板块
+    const pdfSections = document.querySelectorAll('.pdf-section');
     pdfSections.forEach(section => {
         section.addEventListener('click', function() {
             const target = this.getAttribute('data-target');
-            if (target) {
+            if (target && document.getElementById(target)) {
                 showSection(target);
-                
-                // 更新导航活跃状态
-                navLinks.forEach(l => l.classList.remove('active'));
-                const targetLink = document.querySelector(`.nav-link[data-section="${target}"]`);
-                if (targetLink) {
-                    targetLink.classList.add('active');
-                }
+                updateNavHighlight(target);
+                history.pushState(null, null, '#' + target);
+            }
+        });
+    });
+
+    // 技能标签点击跳转
+    const skillTags = document.querySelectorAll('.skill-tag');
+    skillTags.forEach(tag => {
+        tag.addEventListener('click', function() {
+            const target = this.getAttribute('data-target');
+            if (target && document.getElementById(target)) {
+                showSection(target);
+                updateNavHighlight(target);
+                history.pushState(null, null, '#' + target);
             }
         });
     });
 }
 
+function updateNavHighlight(sectionId) {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    const targetLink = document.querySelector(`.nav-link[data-section="${sectionId}"]`);
+    if (targetLink) targetLink.classList.add('active');
+}
+
 function showSection(sectionId) {
-    // 获取所有section
-    const sections = document.querySelectorAll('.section');
-    const currentActiveSection = document.querySelector('.section.active');
-    
-    // 如果当前section存在，先淡出
-    if (currentActiveSection) {
-        currentActiveSection.style.opacity = '0';
-        currentActiveSection.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            currentActiveSection.classList.remove('active');
-            
-            // 显示目标section（淡入）
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-                
-                // 强制重排，确保过渡生效
-                targetSection.offsetHeight;
-                
-                targetSection.style.opacity = '1';
-                targetSection.style.transform = 'translateY(0)';
-                
-                // 触发动画
-                triggerAnimations(sectionId);
-                
-                // 滚动到顶部
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-        }, 300); // 等待淡出动画完成
-    } else {
-        // 如果没有当前活跃section，直接显示
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-            targetSection.classList.add('active');
-            targetSection.style.opacity = '1';
-            targetSection.style.transform = 'translateY(0)';
-            
-            // 触发动画
-            triggerAnimations(sectionId);
-        }
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(sectionId);
+    if (target) {
+        target.classList.add('active');
+        triggerAnimations(sectionId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    
-    // 更新当前section
     currentSection = sectionId;
 }
 
 // ===========================
-// 版本切换功能
+// 可点击卡片 → 跳转详情页
+// ===========================
+
+function initClickableCards() {
+    // 处理 [data-detail] 卡片（经历/项目/校园等模块）
+    const cards = document.querySelectorAll('[data-detail]');
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            const url = this.getAttribute('data-detail');
+            if (!url) return;
+            let returnSection = this.getAttribute('data-return-section');
+            if (!returnSection) {
+                const parent = this.closest('.section');
+                returnSection = parent ? parent.id : currentSection;
+            }
+            sessionStorage.setItem('resumeReturnSection', returnSection);
+            window.location.href = url;
+        });
+    });
+
+    // 处理核心能力板块的 .skill-item 链接（直接 <a> 跳转，需拦截并记录返回路径）
+    const skillItems = document.querySelectorAll('.skill-item');
+    skillItems.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // 如果已经有 data-return-section 属性，说明已经处理过
+            let returnSection = this.getAttribute('data-return-section');
+            if (!returnSection) {
+                // 找到最近的 .section 父元素
+                const parent = this.closest('.section');
+                returnSection = parent ? parent.id : 'skills';
+            }
+            sessionStorage.setItem('resumeReturnSection', returnSection);
+            // 不让 <a> 默认跳转，改为 JS 跳转（确保 sessionStorage 写入完成）
+            e.preventDefault();
+            window.location.href = this.href;
+        });
+    });
+}
+
+function getReturnSection() {
+    return sessionStorage.getItem('resumeReturnSection') || 'home';
+}
+
+// ===========================
+// 版本切换（侧边栏）
 // ===========================
 
 function initVersionSwitcher() {
-    const versionBtns = document.querySelectorAll('.version-btn');
-    versionBtns.forEach(btn => {
+    const btns = document.querySelectorAll('.version-btn');
+    btns.forEach(btn => {
         btn.addEventListener('click', function() {
             const version = this.getAttribute('data-version');
-            
-            // 使用过渡效果切换版本
-            switchVersionWithTransition(version);
-            
-            // 更新按钮活跃状态
-            versionBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+            switchVersion(version);
+            localStorage.setItem('resumeVersion', version);
+            updateVersionNavBtn(version);
         });
     });
 }
 
 function switchVersion(version) {
     currentVersion = version;
-    
-    // 移除所有版本类
     document.body.classList.remove('version-game', 'version-finance');
-    
-    // 添加当前版本类
-    if (version === 'game') {
-        document.body.classList.add('version-game');
-    } else if (version === 'finance') {
-        document.body.classList.add('version-finance');
-    }
-    
-    // 根据版本改变配色
-    const root = document.documentElement;
-    
-    switch(version) {
-        case 'general':
-            // 通用版：活力紫蓝 + 珊瑚粉 + 温暖黄
-            root.style.setProperty('--primary', '#6c63ff');
-            root.style.setProperty('--secondary', '#ff6584');
-            root.style.setProperty('--accent', '#ffd32a');
-            break;
-            
-        case 'game':
-            // 游戏行业版：紫色 + 红色 + 黄色
-            root.style.setProperty('--primary', '#9b59b6');
-            root.style.setProperty('--secondary', '#e74c3c');
-            root.style.setProperty('--accent', '#f1c40f');
-            break;
-            
-        case 'finance':
-            // 金融专业版：深蓝 + 金色
-            root.style.setProperty('--primary', '#1e3a8a');
-            root.style.setProperty('--secondary', '#d4af37');
-            root.style.setProperty('--accent', '#4facfe');
-            break;
-    }
-    
-    // 显示提示
-    const versionNames = {
-        'general': '通用版',
-        'game': '游戏行业版',
-        'finance': '金融专业版'
-    };
-    
-    showNotification(`已切换到${versionNames[version]}`);
-    
-    // 更新页面内容（根据版本）
+    if (version === 'game') document.body.classList.add('version-game');
+    else if (version === 'finance') document.body.classList.add('version-finance');
     updateContentByVersion(version);
+    showNotification(`已切换到${version==='general'?'通用版':version==='game'?'游戏行业版':'金融专业版'}`);
 }
 
 function updateContentByVersion(version) {
-    // 根据版本更新页面内容
-    const subtitle = document.querySelector('.hero-subtitle');
-    const description = document.querySelectorAll('.hero-description');
-    const gameExperience = document.querySelector('.game-experience');
-    const gameSkills = document.querySelector('.game-skills');
-    
-    if (!subtitle) return;
-    
-    // 显示/隐藏游戏相关内容
-    if (gameExperience) {
-        if (version === 'game') {
-            gameExperience.style.display = 'block';
-        } else {
-            gameExperience.style.display = 'none';
-        }
+    const subtitle = document.querySelector('#heroSubtitle');
+    const gameExp = document.querySelector('.game-experience');
+    const gameBlocks = document.querySelectorAll('.skill-category.game-only');
+
+    if (gameExp) gameExp.style.display = version === 'game' ? 'block' : 'none';
+    gameBlocks.forEach(b => {
+        b.style.display = version === 'game' ? 'block' : 'none';
+    });
+
+    if (subtitle) {
+        subtitle.textContent =
+            version==='general' ? '金融学硕士 | 数据分析 · 审计实务 · 产品策划' :
+            version==='game'   ? '金融学硕士 | 游戏策划 · 游戏运营 · 数据分析' :
+                                  '金融学硕士 | 财务审计 · 金融分析 · 风险管理';
     }
-    
-    if (gameSkills) {
-        if (version === 'game') {
-            gameSkills.style.display = 'block';
-        } else {
-            gameSkills.style.display = 'none';
-        }
-    }
-    
-    switch(version) {
-        case 'general':
-            subtitle.textContent = '金融学硕士 | 数据分析 · 审计实务 · 产品策划';
-            break;
-            
-        case 'game':
-            subtitle.textContent = '金融学硕士 | 游戏策划 · 游戏运营 · 数据分析';
-            if (description[0]) {
-                description[0].innerHTML = `
-                    你好！我是一名即将毕业的金融学硕士，对游戏行业充满热情。
-                    我有丰富的游戏经验，擅长王者荣耀（王者10星）、重返未来1999、雀魂麻将等。
-                    关注游戏行业动态，对游戏剧情、美术风格、叙事设计有独特见解。
-                `;
-            }
-            break;
-            
-        case 'finance':
-            subtitle.textContent = '金融学硕士 | 财务审计 · 金融分析 · 风险管理';
-            if (description[0]) {
-                description[0].innerHTML = `
-                    你好！我是一名即将毕业的金融学硕士，毕业于上海对外经贸大学金融学（数字金融实验班）。
-                    我具备扎实的金融专业背景，在<strong>德勤中国上海所</strong>担任审计实习生，
-                    熟悉审计流程、财务分析和风险管理。
-                `;
-            }
-            break;
+
+    updateResumeByVersion(version);
+    updatePortfolioByVersion(version);
+}
+
+function updateResumeByVersion(version) {
+    // 根据版本更新首页简历预览内容
+    const section = document.querySelector('.pdf-section[data-target="experience"] .pdf-section-content');
+    if (!section) return;
+    if (version === 'game') {
+        section.innerHTML = `
+            <p><strong>德勤中国上海所</strong> | 审计实习生 | 2025.01-2025.04</p>
+            <p class="star-text">锻炼了数据分析能力和细致的工作态度，可迁移至游戏数据分析工作。</p>
+            <p><strong>游戏策划训练营</strong> | 游戏策划实践 | 2024</p>
+            <p class="star-text">参与9次游戏活动策划，熟悉游戏策划工作流程，关注游戏行业动态。</p>
+        `;
+    } else {
+        section.innerHTML = `
+            <p><strong>德勤中国上海所</strong> | 审计实习生 | 2025.01-2025.04</p>
+            <p class="star-text">随团队到7个客户公司完成审计程序，独立完成存货监盘、凭证信息查找和核对，使用Excel进行52份底稿数据核对整理。</p>
+            <p><strong>中国建设银行黄山分行</strong> | 大堂经理实习生 | 2023.07-2023.08</p>
+            <p class="star-text">协助营业网点大堂服务，引导客户操作，参与普惠金融地方应用的实际调研。</p>
+        `;
     }
 }
 
-// ===========================
-// 展示滑块功能（工作实习、项目经历等）
-// ===========================
-
-function initShowcaseSliders() {
-    // 为所有展示滑块初始化
-    const sliders = document.querySelectorAll('.showcase-slider');
-    
-    sliders.forEach(slider => {
-        const sliderId = slider.id;
-        const container = slider.querySelector('.slider-container');
-        const slides = slider.querySelectorAll('.slide');
-        const prevBtn = slider.querySelector('.slider-prev');
-        const nextBtn = slider.querySelector('.slider-next');
-        const dotsContainer = slider.querySelector('.slider-dots');
-        
-        if (!container || slides.length === 0) return;
-        
-        // 创建dots
-        if (dotsContainer) {
-            slides.forEach((_, index) => {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                if (index === 0) dot.classList.add('active');
-                dot.setAttribute('data-slide', index);
-                
-                dot.addEventListener('click', () => {
-                    goToSlide(sliderId, index);
-                });
-                
-                dotsContainer.appendChild(dot);
-            });
-        }
-        
-        // 存储slider状态
-        showcaseSliders[sliderId] = {
-            currentSlide: 0,
-            totalSlides: slides.length,
-            container: container,
-            slides: slides
-        };
-        
-        // 添加事件监听
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                prevSlide(sliderId);
-            });
-        }
-        
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                nextSlide(sliderId);
-            });
-        }
-    });
-}
-
-function goToSlide(sliderId, slideIndex) {
-    const sliderData = showcaseSliders[sliderId];
-    if (!sliderData) return;
-    
-    const { slides, totalSlides } = sliderData;
-    
-    // 确保索引在有效范围内
-    if (slideIndex < 0) slideIndex = totalSlides - 1;
-    if (slideIndex >= totalSlides) slideIndex = 0;
-    
-    // 移除所有active类
-    slides.forEach(slide => {
-        slide.classList.remove('active');
-    });
-    
-    // 添加active类到目标slide
-    slides[slideIndex].classList.add('active');
-    
-    // 更新dots
-    const slider = document.getElementById(sliderId);
-    if (slider) {
-        const dots = slider.querySelectorAll('.dot');
-        dots.forEach((dot, index) => {
-            if (index === slideIndex) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
+function updatePortfolioByVersion(version) {
+    // 静态 HTML 已经有完整的作品集卡片（12个），版本切换不再覆盖，避免破坏跳转
+    // 通用版：显示全部；游戏版：突出游戏相关作品（data-category=game）
+    const grid = document.querySelector('.portfolio-grid');
+    if (!grid) return;
+    if (version === 'game') {
+        // 游戏版：在卡片底部追加游戏相关提示
+        const gameItems = grid.querySelectorAll('.portfolio-item[data-category="game"]');
+        gameItems.forEach(item => {
+            if (!item.querySelector('.game-badge')) {
+                const badge = document.createElement('div');
+                badge.className = 'game-badge';
+                badge.textContent = '🎮 游戏版推荐';
+                badge.style.cssText = 'position:absolute;top:8px;right:8px;background:var(--gradient-warm);color:#fff;padding:3px 10px;border-radius:9999px;font-size:0.7rem;font-weight:600;z-index:5;';
+                item.appendChild(badge);
             }
         });
+    } else {
+        // 通用版 / 金融版：移除游戏徽章
+        grid.querySelectorAll('.game-badge').forEach(b => b.remove());
     }
-    
-    // 更新当前slide索引
-    showcaseSliders[sliderId].currentSlide = slideIndex;
-}
-
-function prevSlide(sliderId) {
-    const sliderData = showcaseSliders[sliderId];
-    if (!sliderData) return;
-    
-    let newIndex = sliderData.currentSlide - 1;
-    if (newIndex < 0) newIndex = sliderData.totalSlides - 1;
-    
-    goToSlide(sliderId, newIndex);
-}
-
-function nextSlide(sliderId) {
-    const sliderData = showcaseSliders[sliderId];
-    if (!sliderData) return;
-    
-    let newIndex = sliderData.currentSlide + 1;
-    if (newIndex >= sliderData.totalSlides) newIndex = 0;
-    
-    goToSlide(sliderId, newIndex);
 }
 
 // ===========================
-// 技能条动画
-// ===========================
-
-function initSkillBars() {
-    // 使用Intersection Observer监听技能条是否进入视口
-    const skillBars = document.querySelectorAll('.skill-progress');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const skillBar = entry.target;
-                const width = skillBar.getAttribute('data-width');
-                skillBar.style.width = width + '%';
-                observer.unobserve(skillBar);
-            }
-        });
-    }, {
-        threshold: 0.5
-    });
-    
-    skillBars.forEach(bar => {
-        observer.observe(bar);
-    });
-}
-
-// ===========================
-// 作品集筛选功能
+// 作品集筛选
 // ===========================
 
 function initPortfolioFilter() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
-    
-    filterBtns.forEach(btn => {
+    const btns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.portfolio-item');
+    btns.forEach(btn => {
         btn.addEventListener('click', function() {
             const filter = this.getAttribute('data-filter');
-            
-            // 更新按钮活跃状态
-            filterBtns.forEach(b => b.classList.remove('active'));
+            btns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            
-            // 筛选作品
-            portfolioItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-                
-                if (filter === 'all' || category === filter) {
-                    item.style.display = 'block';
-                    setTimeout(() => {
-                        item.style.opacity = '1';
-                        item.style.transform = 'scale(1)';
-                    }, 10);
-                } else {
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.8)';
-                    setTimeout(() => {
-                        item.style.display = 'none';
-                    }, 300);
-                }
+            items.forEach(item => {
+                const cat = item.getAttribute('data-category');
+                item.style.display = (filter === 'all' || cat === filter) ? 'block' : 'none';
             });
         });
     });
 }
 
 // ===========================
-// PDF查看器功能
+// PDF 按钮
 // ===========================
 
 function initPDFViewer() {
-    const viewBtn = document.getElementById('viewResume');
-    const downloadBtn = document.getElementById('downloadResumeBtn');
-    
+    const viewBtn = document.getElementById('viewResumeBtn');
     if (viewBtn) {
-        viewBtn.addEventListener('click', function() {
-            // TODO: 实现PDF查看功能
-            showNotification('PDF查看功能待实现，请先上传PDF文件');
-        });
-    }
-    
-    if (downloadBtn) {
-        downloadBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            // TODO: 实现PDF下载功能
-            showNotification('PDF下载功能待实现，请先上传PDF文件');
+        viewBtn.addEventListener('click', () => {
+            window.open('苏欣彤_中文简历.pdf', '_blank');
         });
     }
 }
 
 // ===========================
-// 动画触发
+// 返回顶部
+// ===========================
+
+function initBackToTop() {
+    const btn = document.getElementById('backToTop');
+    if (!btn) return;
+    window.addEventListener('scroll', () => {
+        btn.classList.toggle('visible', window.scrollY > 300);
+    });
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// ===========================
+// 水波纹点击效果
+// ===========================
+
+function initRippleEffect() {
+    const buttons = document.querySelectorAll('.btn, .version-btn, .nav-link, .skill-tag, .filter-btn, .version-modal-btn');
+    buttons.forEach(btn => {
+        btn.style.position = 'relative';
+        btn.style.overflow = 'hidden';
+        btn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 700);
+        });
+    });
+}
+
+// ===========================
+// 背景动效 — 纯背景漂浮粒子 + 光晕（不跟随鼠标）
+// 主题色：紫/粉/黄/蓝渐变，白色为主，在底层
+// ===========================
+
+function initBackgroundEffect() {
+    const canvas = document.getElementById('bgCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    // 主题色
+    const colors = [
+        { r: 108, g: 99, b: 255 },   // 紫蓝
+        { r: 255, g: 101, b: 132 },  // 珊瑚粉
+        { r: 255, g: 211, b: 42 },   // 暖黄
+        { r: 79,  g: 172, b: 254 },  // 天蓝
+        { r: 138, g: 132, b: 255 },  // 浅紫
+    ];
+
+    const particles = [];
+    const shapeTypes = ['dot', 'star', 'coin', 'diamond', 'ring', 'triangle', 'cross', 'heart', 'cloud', 'orb'];
+
+    // —— 各类形状粒子（共 ~90 个）——
+    const shapeCounts = { dot: 14, star: 16, coin: 10, diamond: 10, ring: 8, triangle: 8, cross: 8, heart: 6, cloud: 4, orb: 6 };
+    Object.entries(shapeCounts).forEach(([type, count]) => {
+        for (let i = 0; i < count; i++) {
+            const size = type === 'orb' ? 35 + Math.random() * 70 : 4 + Math.random() * 10;
+            particles.push({
+                type: type,
+                x: Math.random() * W,
+                y: Math.random() * H,
+                size: size,
+                alpha: 0.06 + Math.random() * 0.12,
+                dx: (Math.random() - 0.5) * 0.28,
+                dy: (Math.random() - 0.5) * 0.24,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.4 + Math.random() * 1.8,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.008
+            });
+        }
+    });
+
+    // —— 绘制函数 ——
+
+    function drawDot(p, t) {
+        const twinkle = Math.sin(t * p.speed + p.phase) * 0.06;
+        const a = Math.max(0.04, Math.min(0.22, p.alpha + twinkle));
+        ctx.save();
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},1)`;
+        ctx.shadowColor = `rgba(${p.color.r},${p.color.g},${p.color.b},0.7)`;
+        ctx.shadowBlur = 6 + p.size * 2;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function drawStar(p, t) {
+        const twinkle = Math.sin(t * p.speed + p.phase) * 0.04;
+        const a = Math.max(0.04, Math.min(0.18, p.alpha + twinkle));
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},1)`;
+        ctx.shadowColor = `rgba(${p.color.r},${p.color.g},${p.color.b},0.5)`;
+        ctx.shadowBlur = 4;
+        ctx.beginPath();
+        const spikes = 5, outerR = p.size, innerR = p.size * 0.4;
+        for (let i = 0; i < spikes * 2; i++) {
+            const r = i % 2 === 0 ? outerR : innerR;
+            const angle = (i * Math.PI) / spikes - Math.PI / 2;
+            const x = Math.cos(angle) * r, y = Math.sin(angle) * r;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function drawCoin(p, t) {
+        const a = p.alpha + Math.sin(t * 0.7 + p.phase) * 0.02;
+        ctx.save();
+        ctx.globalAlpha = a;
+        // 外圈
+        ctx.strokeStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.7)`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.stroke();
+        // 内圈
+        ctx.strokeStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.4)`;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 0.55, 0, Math.PI * 2);
+        ctx.stroke();
+        // 中心点
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.5)`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 0.18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function drawDiamond(p, t) {
+        const a = p.alpha + Math.sin(t * 0.9 + p.phase) * 0.03;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.55)`;
+        ctx.shadowColor = `rgba(${p.color.r},${p.color.g},${p.color.b},0.35)`;
+        ctx.shadowBlur = 3;
+        ctx.beginPath();
+        const s = p.size * 0.8;
+        ctx.moveTo(0, -s);
+        ctx.lineTo(s, 0);
+        ctx.lineTo(0, s);
+        ctx.lineTo(-s, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function drawRing(p, t) {
+        const a = p.alpha + Math.sin(t * 1.1 + p.phase) * 0.025;
+        ctx.save();
+        ctx.globalAlpha = a;
+        ctx.strokeStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.6)`;
+        ctx.lineWidth = 1.4;
+        ctx.shadowColor = `rgba(${p.color.r},${p.color.g},${p.color.b},0.3)`;
+        ctx.shadowBlur = 3;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawTriangle(p, t) {
+        const a = p.alpha + Math.sin(t * 0.8 + p.phase) * 0.03;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.45)`;
+        ctx.beginPath();
+        const s = p.size;
+        ctx.moveTo(0, -s);
+        ctx.lineTo(s * 0.87, s * 0.5);
+        ctx.lineTo(-s * 0.87, s * 0.5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function drawCross(p, t) {
+        const a = p.alpha + Math.sin(t * 0.85 + p.phase) * 0.025;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.5)`;
+        const s = p.size, w = s * 0.32;
+        ctx.fillRect(-s, -w, s * 2, w * 2);
+        ctx.fillRect(-w, -s, w * 2, s * 2);
+        ctx.restore();
+    }
+
+    function drawHeart(p, t) {
+        const a = p.alpha + Math.sin(t * 0.75 + p.phase) * 0.03;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.5)`;
+        ctx.beginPath();
+        const s = p.size * 0.65;
+        ctx.moveTo(0, s * 0.6);
+        ctx.bezierCurveTo(-s, -s * 0.2, -s * 0.5, -s * 1.1, 0, -s * 0.5);
+        ctx.bezierCurveTo(s * 0.5, -s * 1.1, s, -s * 0.2, 0, s * 0.6);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function drawCloud(p, t) {
+        const a = p.alpha + Math.sin(t * 0.6 + p.phase) * 0.02;
+        ctx.save();
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgba(${p.color.r},${p.color.g},${p.color.b},0.4)`;
+        const s = p.size * 0.6;
+        // 多层叠加圆 → 云朵轮廓
+        [{ x: 0, y: 0, r: s }, { x: s * 1.1, y: -s * 0.2, r: s * 0.75 }, { x: -s * 1.0, y: -s * 0.1, r: s * 0.7 }, { x: s * 0.5, y: s * 0.3, r: s * 0.65 }, { x: -s * 0.4, y: s * 0.25, r: s * 0.55 }].forEach(c => {
+            ctx.beginPath();
+            ctx.arc(p.x + c.x, p.y + c.y, c.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.restore();
+    }
+
+    function drawOrb(p, t) {
+        const pulse = Math.sin(t * p.speed + p.phase) * 0.5 + 0.5;
+        const a = p.alpha * (0.4 + pulse * 0.6);
+        // 外层大光晕
+        ctx.save();
+        ctx.globalAlpha = a * 0.3;
+        const gradOuter = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2.5);
+        gradOuter.addColorStop(0, `rgba(${p.color.r},${p.color.g},${p.color.b},0.3)`);
+        gradOuter.addColorStop(0.5, `rgba(${p.color.r},${p.color.g},${p.color.b},0.08)`);
+        gradOuter.addColorStop(1, `rgba(${p.color.r},${p.color.g},${p.color.b},0)`);
+        ctx.fillStyle = gradOuter;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        // 内核
+        ctx.save();
+        ctx.globalAlpha = a * 0.8;
+        const gradInner = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 0.3);
+        gradInner.addColorStop(0, `rgba(${p.color.r},${p.color.g},${p.color.b},0.22)`);
+        gradInner.addColorStop(1, `rgba(${p.color.r},${p.color.g},${p.color.b},0)`);
+        ctx.fillStyle = gradInner;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    const drawFns = { dot: drawDot, star: drawStar, coin: drawCoin, diamond: drawDiamond, ring: drawRing, triangle: drawTriangle, cross: drawCross, heart: drawHeart, cloud: drawCloud, orb: drawOrb };
+
+    function animate() {
+        ctx.clearRect(0, 0, W, H);
+        const t = Date.now() * 0.001;
+
+        particles.forEach(p => {
+            drawFns[p.type](p, t);
+            p.rotation += p.rotSpeed;
+            p.x += p.dx;
+            p.y += p.dy;
+            if (p.x < -60) p.x = W + 60;
+            if (p.x > W + 60) p.x = -60;
+            if (p.y < -60) p.y = H + 60;
+            if (p.y > H + 60) p.y = -60;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+    });
+}
+
+// ===========================
+// 核心能力项 — 点击跳转（记录返回来源）
+// ===========================
+
+function initSkillItemClicks() {
+    const items = document.querySelectorAll('.skill-item');
+    items.forEach(item => {
+        item.addEventListener('click', function(e) {
+            const url = this.getAttribute('href');
+            if (!url || url === '#' || url.startsWith('skill-detail.html')) {
+                // skill-detail.html 和外部链接正常跳转
+                sessionStorage.setItem('resumeReturnSection', 'skills');
+                return;
+            }
+            // 其他详情页也记录返回来源
+            sessionStorage.setItem('resumeReturnSection', 'skills');
+        });
+    });
+}
+
+// ===========================
+// 作品集 hover 重设计
+// ===========================
+
+function initPortfolioHoverRedesign() {
+    const items = document.querySelectorAll('.portfolio-item');
+    items.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.classList.add('hovered');
+        });
+        item.addEventListener('mouseleave', function() {
+            this.classList.remove('hovered');
+        });
+    });
+}
+
+// ===========================
+// 卡片入场动画
 // ===========================
 
 function triggerAnimations(sectionId) {
     const section = document.getElementById(sectionId);
     if (!section) return;
-    
-    // 为section内的卡片添加动画
-    const cards = section.querySelectorAll('.experience-card, .project-card, .campus-card, .award-card, .portfolio-item');
-    
-    cards.forEach((card, index) => {
-        // 初始状态
+    const cards = section.querySelectorAll('.experience-card, .project-card, .campus-card, .award-card, .portfolio-item, .skill-category');
+    cards.forEach((card, i) => {
         card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        
-        // 依次淡入
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
         setTimeout(() => {
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
-        }, index * 100);
+        }, i * 80 + 80);
     });
 }
 
 // ===========================
-// 通知功能
+// 通知提示
 // ===========================
 
 function showNotification(message) {
-    // 创建通知元素
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #6c63ff 0%, #8a84ff 100%);
-        color: white;
-        padding: 16px 24px;
-        border-radius: 8px;
-        box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
-        z-index: 10000;
-        font-weight: 600;
-        animation: slideIn 0.3s ease;
+    const existing = document.querySelector('.notification-toast');
+    if (existing) existing.remove();
+
+    const n = document.createElement('div');
+    n.className = 'notification-toast';
+    n.textContent = message;
+    n.style.cssText = `
+        position: fixed; top: 20px; right: 20px; z-index: 99999;
+        background: linear-gradient(135deg, #6c63ff, #8a84ff);
+        color: white; padding: 12px 24px; border-radius: 12px;
+        font-weight: 600; font-size: 0.9rem;
+        box-shadow: 0 6px 24px rgba(108, 99, 255, 0.25);
+        animation: notifIn 0.35s ease;
     `;
-    notification.textContent = message;
-    
-    // 添加动画样式
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    document.body.appendChild(notification);
-    
-    // 3秒后移除通知
+    document.body.appendChild(n);
     setTimeout(() => {
-        notification.style.animation = 'slideIn 0.3s ease reverse';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
+        n.style.animation = 'notifOut 0.35s ease forwards';
+        setTimeout(() => n.remove(), 350);
+    }, 2200);
 
-// ===========================
-// 平滑滚动
-// ===========================
-
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
+    if (!document.getElementById('notifKeyframes')) {
+        const style = document.createElement('style');
+        style.id = 'notifKeyframes';
+        style.textContent = `
+            @keyframes notifIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            @keyframes notifOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
+        `;
+        document.head.appendChild(style);
+    }
 }

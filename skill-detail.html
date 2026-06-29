@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>能力详情</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .detail-container { max-width: 860px; margin: 0 auto; padding: 40px 32px 64px; }
+        .detail-header { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 2px solid var(--light-gray); }
+        .detail-breadcrumb { font-size: 0.85rem; color: var(--text-light); margin-bottom: 12px; }
+        .detail-breadcrumb i { margin: 0 6px; font-size: 0.7rem; color: var(--primary-light); }
+        .detail-title { font-size: 1.8rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; }
+        .detail-subtitle { font-size: 1rem; color: var(--text-light); line-height: 1.7; }
+        .detail-section { margin-bottom: 32px; }
+        .detail-section h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; }
+        .detail-section h3 i { color: var(--primary); font-size: 0.95rem; }
+        .detail-section p { color: var(--text-light); line-height: 1.8; margin-bottom: 8px; font-size: 0.93rem; }
+        .detail-section ul { list-style: none; }
+        .detail-section li { padding: 10px 0; color: var(--text-light); display: flex; align-items: flex-start; gap: 10px; border-bottom: 1px solid var(--light); font-size: 0.93rem; line-height: 1.65; }
+        .detail-section li:last-child { border-bottom: none; }
+        .detail-section li i { color: var(--primary); margin-top: 5px; flex-shrink: 0; font-size: 0.8rem; }
+
+        .tag-list { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+        .tag-list span {
+            padding: 5px 15px; background: var(--light); border-radius: var(--radius-full);
+            color: var(--primary); font-weight: 600; font-size: 0.83rem;
+        }
+
+        .project-card { background: var(--light); border-radius: 12px; padding: 18px 22px; margin-bottom: 14px; border-left: 3px solid var(--primary); }
+        .project-card h4 { font-size: 0.95rem; color: var(--text); margin-bottom: 6px; font-weight: 700; }
+        .project-card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; margin-bottom: 0; }
+
+        @media (max-width: 768px) {
+            .detail-container { padding: 24px 18px 48px; }
+            .detail-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="side-nav">
+        <div class="nav-logo">
+            <div class="logo-name">苏欣彤 <span class="logo-en">Allison</span></div>
+            <div class="logo-contact">
+                <span><i class="fas fa-phone"></i> 138-5594-8332</span>
+                <span><i class="fas fa-envelope"></i> 1399102946@qq.com</span>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html#home" class="nav-link"><i class="fas fa-home"></i><span>首页</span></a></li>
+            <li><a href="index.html#about" class="nav-link"><i class="fas fa-user"></i><span>关于我</span></a></li>
+            <li><a href="index.html#skills" class="nav-link active"><i class="fas fa-chart-line"></i><span>核心能力</span></a></li>
+            <li><a href="index.html#experience" class="nav-link"><i class="fas fa-briefcase"></i><span>工作实习</span></a></li>
+            <li><a href="index.html#projects" class="nav-link"><i class="fas fa-project-diagram"></i><span>项目经历</span></a></li>
+            <li><a href="index.html#campus" class="nav-link"><i class="fas fa-university"></i><span>校园经历</span></a></li>
+            <li><a href="index.html#portfolio" class="nav-link"><i class="fas fa-folder-open"></i><span>作品集</span></a></li>
+            <li><a href="index.html#awards" class="nav-link"><i class="fas fa-trophy"></i><span>荣誉奖项</span></a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <div class="detail-container">
+            <!-- 智能返回按钮（由 page-nav.js 注入） -->
+            <div id="navTop"></div>
+
+            <!-- 动态内容区域 -->
+            <div id="skillContent">
+                <div style="text-align:center;padding:80px 20px;color:var(--text-light);">
+                    <i class="fas fa-spinner fa-spin" style="font-size:2rem;margin-bottom:16px;display:block;"></i>
+                    加载能力详情...
+                </div>
+            </div>
+
+            <!-- 底部智能返回按钮 + 快速导航（由 page-nav.js 注入） -->
+            <div id="navBottom"></div>
+        </div>
+    </div>
+
+    <script src="js/page-nav.js"></script>
+    <script>
+    (function() {
+        const params = new URLSearchParams(window.location.search);
+        const skillKey = params.get('skill') || '';
+
+        // ===== 技能数据定义 =====
+        const skillData = {
+            'python': {
+                category: '数据分析', categoryIcon: 'fa-chart-bar',
+                title: 'Python数据分析',
+                summary: '掌握Python数据科学生态，能够使用Pandas、NumPy进行数据清洗与处理，使用Matplotlib、Seaborn进行可视化分析，具备从数据获取到结果呈现的完整分析能力。',
+                tools: ['Python', 'Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'Jupyter Notebook', 'Scikit-learn'],
+                projects: [
+                    { title: '电商用户行为分析', desc: '使用Pandas对某电商平台用户行为数据进行清洗和聚合分析，通过数据透视表和分组聚合，识别用户活跃时段、购买转化路径等关键指标，为运营策略优化提供数据支持。' },
+                    { title: '数据可视化仪表板设计', desc: '基于Matplotlib和Seaborn构建多维度数据可视化仪表板，包含趋势折线图、分布直方图、热力图等图表类型，直观呈现分析结论。' },
+                    { title: '数据采集与预处理流程', desc: '设计并实现数据采集与预处理自动化流程，包括数据清洗（缺失值处理、异常值检测）、特征工程（标准化、编码转换）和数据集划分，为后续建模分析提供高质量输入。' }
+                ],
+                related: [
+                    { text: '互联网+大赛 — 竞品数据分析', link: 'project-detail.html' },
+                    { text: '德勤审计实习 — Excel数据整理', link: 'experience-detail.html' }
+                ]
+            },
+            'excel': {
+                category: '数据分析', categoryIcon: 'fa-chart-bar',
+                title: 'Excel数据分析',
+                summary: '熟练掌握Excel高级功能，包括数据透视表、VLOOKUP/XLOOKUP、条件格式、图表制作等，能够高效完成数据处理和报表制作任务。',
+                tools: ['Excel', '数据透视表', 'VLOOKUP', 'Power Query', '条件格式', '图表制作'],
+                projects: [
+                    { title: '财务数据整理与报表制作', desc: '使用Excel处理大批量财务数据，通过数据透视表进行多维度汇总分析，利用条件格式和图表功能制作可视化财务报表，提高数据呈现的专业性和可读性。' },
+                    { title: '销售数据分析报表', desc: '运用VLOOKUP和INDEX-MATCH函数进行跨表数据匹配，通过数据透视表实现销售数据的多维度交叉分析，生成月度/季度销售分析报告。' },
+                    { title: '运营数据监控仪表板', desc: '在Excel中构建运营数据监控仪表板，集成关键KPI指标、趋势图表和预警条件格式，实现数据的自动化汇总和可视化展示。' }
+                ],
+                related: [
+                    { text: '德勤审计实习 — Excel底稿数据整理', link: 'experience-detail.html' },
+                    { text: '审计底稿编制', link: 'portfolio-detail-audit.html' }
+                ]
+            },
+            'mysql': {
+                category: '数据分析', categoryIcon: 'fa-chart-bar',
+                title: 'MySQL数据库',
+                summary: '掌握MySQL数据库的基本操作和SQL查询语言，能够进行数据建表、查询优化、多表联查等操作，具备使用数据库进行数据管理和分析的能力。',
+                tools: ['MySQL', 'SQL', 'Navicat', '数据库设计', '查询优化', '索引管理'],
+                projects: [
+                    { title: '学生信息管理系统数据库设计', desc: '设计并实现学生信息管理系统的数据库结构，包括学生表、课程表、成绩表等多表关系设计，使用外键约束确保数据完整性，编写存储过程实现复杂业务逻辑。' },
+                    { title: '电商数据查询与分析', desc: '针对电商业务数据编写复杂SQL查询，包括多表JOIN查询、子查询、聚合函数和窗口函数，实现用户消费行为分析和商品销售统计。' },
+                    { title: '数据查询性能优化', desc: '对慢查询进行分析和优化，通过添加索引、改写SQL语句、优化表结构等方式提升查询性能，掌握EXPLAIN执行计划分析方法。' }
+                ],
+                related: [
+                    { text: 'R语言统计分析作品', link: 'portfolio-detail-r.html' }
+                ]
+            },
+            'financial-analysis': {
+                category: '财务审计', categoryIcon: 'fa-coins',
+                title: '财务分析',
+                summary: '具备财务报表分析能力，能够运用比率分析、趋势分析和杜邦分析法等工具，对企业的盈利能力、偿债能力、运营效率进行多维度评估。',
+                tools: ['财务比率分析', '杜邦分析', '财务报表解读', 'Excel财务建模', '趋势分析'],
+                projects: [
+                    { title: '上市公司财务报表分析', desc: '选取某上市公司近三年财务报表，运用比率分析法计算盈利能力、偿债能力、营运能力等关键指标，通过趋势分析和行业对标，形成完整的财务分析报告。' },
+                    { title: '杜邦分析体系构建', desc: '基于杜邦分析框架，将净资产收益率（ROE）分解为销售净利率、资产周转率和权益乘数三个驱动因素，识别影响企业综合盈利能力的关键变量。' },
+                    { title: '财务预测模型设计', desc: '基于历史财务数据和业务假设，构建财务预测模型，包括收入预测、成本费用预测、现金流预测等模块，为企业经营决策提供量化参考。' }
+                ],
+                related: [
+                    { text: '德勤审计实习 — 审计底稿编制', link: 'experience-detail.html' },
+                    { text: '审计底稿作品', link: 'portfolio-detail-audit.html' }
+                ]
+            },
+            'business-model': {
+                category: '产品策划', categoryIcon: 'fa-rocket',
+                title: '商业模式设计',
+                summary: '掌握商业模式画布、价值主张设计等工具，能够从客户细分、价值主张、渠道通路、收入来源等维度系统性地梳理和设计商业模型。',
+                tools: ['商业模式画布', '价值主张画布', 'SWOT分析', '波特五力模型', '精益画布'],
+                projects: [
+                    { title: '互联网+大赛 — 商业模式设计', desc: '在互联网+大学生创新创业大赛中，运用商业模式画布工具，从客户细分、价值主张、收入来源等九大维度系统梳理项目商业模式，完成商业计划书撰写。' },
+                    { title: '竞品商业模式对标分析', desc: '选取行业头部企业进行商业模式对标分析，从价值主张、盈利模式、核心资源等维度进行比较，识别差异化竞争机会和潜在创新方向。' },
+                    { title: '新业务线商业模式探索', desc: '针对假设的新业务场景，运用精益画布方法进行商业模式假设验证，包括问题-解决方案匹配、客户群体验证和收入模型测试。' }
+                ],
+                related: [
+                    { text: '互联网+大赛 — 文旅赛道商业计划书', link: 'project-detail.html' },
+                    { text: 'SWOT竞品分析作品', link: 'portfolio-detail-swot.html' }
+                ]
+            },
+            'game-design': {
+                category: '游戏分析', categoryIcon: 'fa-gamepad',
+                title: '游戏策划',
+                summary: '了解游戏策划核心方法论，包括游戏系统设计、关卡设计、数值平衡等内容，能够从玩家体验出发进行游戏功能分析和策划方案设计。',
+                tools: ['游戏系统设计', '关卡策划', '数值设计', '玩家体验分析', '竞品分析'],
+                projects: [
+                    { title: '游戏系统逆向分析', desc: '选取热门手游进行核心系统逆向拆解，包括战斗系统、成长系统、经济系统等模块，撰写系统分析文档，总结设计思路和可借鉴之处。' },
+                    { title: '休闲游戏关卡设计方案', desc: '针对休闲品类游戏，设计10关关卡流程，包括难度曲线规划、新机制引入节奏、奖励反馈设计，并通过数值模拟验证关卡平衡性。' },
+                    { title: '游戏数值体系建模', desc: '建立游戏数值模型，包括角色成长曲线、装备属性数值、消耗品定价等，通过Excel进行数值模拟和平衡性验证，确保长线体验的平滑性。' }
+                ],
+                related: []
+            },
+            'game-event': {
+                category: '游戏分析', categoryIcon: 'fa-gamepad',
+                title: '活动运营设计',
+                summary: '了解游戏活动运营的基本方法论，包括活动策划、执行流程、效果评估等，能够设计完整的游戏内活动方案并进行效果分析。',
+                tools: ['活动策划', '运营方案设计', '数据分析', '用户激励设计', '活动复盘'],
+                projects: [
+                    { title: '游戏运营活动策划方案', desc: '设计一套完整的游戏内运营活动方案，包括节日主题活动、限时挑战活动、签到奖励活动等类型，涵盖活动目标设定、规则设计、奖励配置和效果预估。' },
+                    { title: '活动数据效果评估', desc: '针对上线的游戏活动进行数据追踪和效果评估，通过活动参与率、完成率、付费转化率、留存影响等指标，分析活动ROI并提出优化建议。' },
+                    { title: '用户激励体系设计', desc: '设计包含日常任务、成就系统、赛季通行证等模块的用户激励体系，通过行为经济学原理驱动玩家持续参与和活跃。' }
+                ],
+                related: []
+            },
+            'player-analysis': {
+                category: '游戏分析', categoryIcon: 'fa-gamepad',
+                title: '玩家数据分析',
+                summary: '掌握游戏数据分析的基本方法，能够通过玩家行为数据进行用户画像分析、留存分析和付费分析等，为游戏运营和产品优化提供数据支持。',
+                tools: ['用户画像', '留存分析', '漏斗分析', 'A/B测试', '数据可视化'],
+                projects: [
+                    { title: '玩家留存分析报告', desc: '基于游戏玩家登录和活跃数据，运用队列分析方法（Cohort Analysis）进行次日/7日/30日留存率计算，识别影响留存的关键行为节点。' },
+                    { title: '付费用户画像构建', desc: '对游戏付费用户进行分层分析，根据付费金额、付费频率、首次付费时间等维度构建用户画像，为精准运营策略提供依据。' },
+                    { title: '玩家流失预警分析', desc: '通过分析流失玩家在流失前的行为模式变化，建立流失预警指标体系，为运营团队提供干预时机的参考依据。' }
+                ],
+                related: []
+            },
+            'user-interview': {
+                category: '市场调研', categoryIcon: 'fa-search',
+                title: '用户访谈',
+                summary: '掌握用户访谈的基本方法和技巧，包括访谈提纲设计、深度访谈执行、访谈记录整理和洞察提炼，能够通过定性研究挖掘用户真实需求。',
+                tools: ['深度访谈', '焦点小组', '用户旅程地图', '需求分析', '亲和图法'],
+                projects: [
+                    { title: '用户需求调研项目', desc: '针对目标用户群体设计和执行深度访谈，通过半结构化访谈提纲引导对话，收集用户痛点、使用场景和期望功能等信息，整理成需求分析报告。' },
+                    { title: '焦点小组座谈会组织', desc: '策划并主持焦点小组座谈会，通过小组讨论方式收集多位用户对产品功能和使用体验的反馈，提炼共性需求和差异化意见。' },
+                    { title: '用户画像与旅程地图构建', desc: '基于访谈和调研数据，构建典型用户画像（Persona），绘制用户旅程地图（Customer Journey Map），识别关键触点和体验痛点。' }
+                ],
+                related: [
+                    { text: '互联网+大赛 — 文旅市场调研', link: 'project-detail.html' }
+                ]
+            },
+            'research-report': {
+                category: '市场调研', categoryIcon: 'fa-search',
+                title: '调研报告撰写',
+                summary: '具备专业调研报告的撰写能力，能够从研究设计、数据收集、分析到报告呈现完成全流程工作，输出结构清晰、论证充分的调研分析报告。',
+                tools: ['报告撰写', '问卷设计', '数据分析', 'PPT制作', '文献综述'],
+                projects: [
+                    { title: '市场调研分析报告', desc: '针对特定行业或产品进行全面的市场调研，包括宏观环境分析（PEST）、竞争格局分析、消费者调研和市场规模测算，形成结构化调研报告。' },
+                    { title: '竞品分析报告编制', desc: '对行业主要竞品进行系统性分析，从产品功能、定价策略、用户评价、市场份额等维度进行比较，输出具备可操作性的竞品分析报告。' },
+                    { title: '可行性研究报告', desc: '在新项目启动前进行可行性研究，包括市场可行性、技术可行性、经济可行性三个维度，为决策层提供全面的评估依据。' }
+                ],
+                related: [
+                    { text: 'SWOT竞品分析作品', link: 'portfolio-detail-swot.html' },
+                    { text: '互联网+大赛项目报告', link: 'project-detail.html' }
+                ]
+            },
+            'english': {
+                category: '跨文化沟通', categoryIcon: 'fa-globe',
+                title: '英语能力',
+                summary: '雅思总分6.5，具备良好的英语听说读写能力。在布里斯托大学硕士阶段全英文授课环境中积累了丰富的学术英语和日常沟通经验。',
+                tools: ['雅思6.5', '学术英语', '商务英语', '英文报告撰写', '全英文授课'],
+                projects: [
+                    { title: '全英文硕士课程学习', desc: '在布里斯托大学完成全英文授课的硕士课程，包括课堂讨论、学术论文写作、小组汇报等环节，在沉浸式英语环境中提升了学术英语应用能力。' },
+                    { title: '英文专业报告撰写', desc: '撰写多篇英文专业课程论文和研究报告，包括文献综述、研究方法设计和数据分析呈现，具备英文学术写作的规范性和专业性。' },
+                    { title: '跨文化团队协作', desc: '与国际学生组成跨文化团队完成课程项目，通过英文进行项目讨论、任务分配和成果汇报，积累了跨文化团队协作经验。' }
+                ],
+                related: [
+                    { text: '布里斯托大学硕士教育背景', link: 'education-detail-master.html' },
+                    { text: '日语辅修经历', link: 'campus-detail-japanese.html' }
+                ]
+            },
+            'global-view': {
+                category: '跨文化沟通', categoryIcon: 'fa-globe',
+                title: '国际化视野',
+                summary: '拥有英国布里斯托大学硕士留学经历和国内上海对外经贸大学本科学历，具备中日英多语言能力和跨文化沟通经验，能够适应国际化工作环境。',
+                tools: ['留学经历', '跨文化沟通', '多语言能力', '国际团队协作', '全球化视野'],
+                projects: [
+                    { title: '英国留学适应与成长', desc: '在英国布里斯托大学攻读硕士学位期间，适应全新的学术体系和文化环境，积极参与校园活动和学术交流，拓展了国际化人脉和视野。' },
+                    { title: '跨文化项目经验', desc: '在多元文化团队中完成课程项目和学术任务，包括与国际学生协作完成案例分析、研究报告和课堂展示，提升跨文化协作能力。' },
+                    { title: '中日英三语能力整合', desc: '整合中英双语学习经验和日语辅修经历，形成中日英三语种的语言能力矩阵，能够在多语言环境中进行高效沟通和信息处理。' }
+                ],
+                related: [
+                    { text: '布里斯托大学硕士教育背景', link: 'education-detail-master.html' },
+                    { text: '日语辅修经历', link: 'campus-detail-japanese.html' }
+                ]
+            }
+        };
+
+        const data = skillData[skillKey];
+
+        if (!data) {
+            document.getElementById('skillContent').innerHTML = `
+                <div style="text-align:center;padding:80px 20px;">
+                    <i class="fas fa-search" style="font-size:3rem;color:var(--text-light);display:block;margin-bottom:16px;"></i>
+                    <p style="color:var(--text-light);font-size:1rem;">未找到对应的能力详情</p>
+                    <p style="color:var(--text-light);font-size:0.85rem;margin-top:8px;">参数: ${skillKey}</p>
+                </div>`;
+            // 即使没有数据也初始化导航
+            initPageNav({ relatedSections: ['experience', 'projects', 'campus', 'portfolio'], fallbackSection: 'skills' });
+            return;
+        }
+
+        let projectsHtml = '';
+        if (data.projects && data.projects.length > 0) {
+            projectsHtml = data.projects.map(p => `
+                <div class="project-card">
+                    <h4>${p.title}</h4>
+                    <p>${p.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        let toolsHtml = '';
+        if (data.tools && data.tools.length > 0) {
+            toolsHtml = data.tools.map(t => `<span>${t}</span>`).join('');
+        }
+
+        let relatedHtml = '';
+        if (data.related && data.related.length > 0) {
+            relatedHtml = '<ul>' + data.related.map(r =>
+                `<li><i class="fas fa-link"></i> <a href="${r.link}" style="color:var(--primary);text-decoration:none;">${r.text} <i class="fas fa-external-link-alt" style="font-size:0.7rem;"></i></a></li>`
+            ).join('') + '</ul>';
+        } else {
+            relatedHtml = '<p style="color:var(--text-light);font-size:0.9rem;font-style:italic;">相关经历页面持续更新中...</p>';
+        }
+
+        // 动态内容（不含返回按钮，由 page-nav.js 统一处理）
+        document.getElementById('skillContent').innerHTML = `
+            <div class="detail-header">
+                <div class="detail-breadcrumb">
+                    <i class="fas ${data.categoryIcon}"></i> ${data.category} <i class="fas fa-chevron-right"></i> ${data.title}
+                </div>
+                <h1 class="detail-title">${data.title}</h1>
+                <p class="detail-subtitle">${data.summary}</p>
+            </div>
+
+            <div class="detail-section">
+                <h3><i class="fas fa-tools"></i> 掌握工具</h3>
+                <div class="tag-list">${toolsHtml}</div>
+            </div>
+
+            <div class="detail-section">
+                <h3><i class="fas fa-project-diagram"></i> 相关项目经验</h3>
+                ${projectsHtml}
+            </div>
+
+            <div class="detail-section">
+                <h3><i class="fas fa-link"></i> 关联经历页面</h3>
+                ${relatedHtml}
+            </div>
+        `;
+
+        // 页面标题
+        document.title = `${data.title} — ${data.category} — 苏欣彤 Allison`;
+
+        // 初始化智能导航（可从核心能力跳转到各详情页，也可返回其他板块）
+        initPageNav({
+            relatedSections: ['experience', 'projects', 'campus', 'portfolio'],
+            fallbackSection: 'skills'
+        });
+    })();
+    </script>
+</body>
+</html>

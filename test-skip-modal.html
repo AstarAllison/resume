@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+localStorage.setItem('resumeVersion', 'general');
+const target = new URLSearchParams(location.search).get('url') || 'index.html#portfolio';
+location.replace('http://127.0.0.1:8765/' + target);
+</script>
+</head>
+<body></body>
+</html>
